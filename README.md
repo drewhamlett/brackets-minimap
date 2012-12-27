@@ -3,7 +3,7 @@ brackets-minimap-extension
 
 Work in progress...
 
-![minimap](./brackets-minimap.png)
+![minimap](https://raw.github.com/drewhjava/brackets-minimap/master/brackets-minimap.png)
 
 Install
 ===
