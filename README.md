@@ -1,7 +1,7 @@
 brackets-minimap-extension
 ============================
 
-Work in progress...
+Work in progress... Please hack on it
 
 ![minimap](https://raw.github.com/drewhjava/brackets-minimap/master/brackets-minimap.png)
 
