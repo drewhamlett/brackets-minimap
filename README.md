@@ -3,6 +3,8 @@ brackets-minimap-extension
 
 Work in progress...
 
+![minimap](brackets-minimap.png)
+
 Install
 ===
 

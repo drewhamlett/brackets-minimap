@@ -32,7 +32,7 @@ define(function (require, exports, module) {
 
 
 	function pxToLine(px) {
-		return px / 4;
+		return px / 8.4;
 	}
 
 
@@ -43,17 +43,19 @@ define(function (require, exports, module) {
 		var height = $(window).height();
 
 		var editor = EditorManager.getCurrentFullEditor();
-
+		
 		var lineCount = editor.lineCount();
-
+		
 		console.log(lineCount);
-		console.log(editor.totalHeight(true));
+		var totalHeight = editor.totalHeight(true);
+		console.log(editor.totalHeight(true) + ' ' + height );
 
 		var doc = DocumentManager.getCurrentDocument();
+		console.log($(doc));
 		//var doc = editor.document;	
 
 		if (doc) {
-			console.log($('.CodeMirror-lines div div:eq(2)').html());
+			//console.log($('.CodeMirror-lines div div:eq(2)').html());
 			_change($('.CodeMirror-lines div div:eq(2)').html());
 
 			$(doc).on('change', function () {
@@ -61,7 +63,7 @@ define(function (require, exports, module) {
 			});
 
 			miniSelectionEl.css({
-				height: lineToPx(68) + 'px'
+				height: pxToLine(height) + 'px'
 			});
 
 			//			miniSelectionEl.draggable({
