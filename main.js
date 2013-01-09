@@ -32,38 +32,52 @@ define(function (require, exports, module) {
 
 
 	function pxToLine(px) {
-		return px / 8.4;
+        return px / 8.4;
 	}
 
+    function _documentChange() {
+        var editor = EditorManager.getCurrentFullEditor();
+        $(editor).on('scroll', function(e){
+            var height = $(editor.getScrollerElement()).height();
+            var totalHeight = editor.totalHeight(true);
+            var miniSelectionEl = $('#mini-map .selection')[0];
+            //console.log(miniSelectionEl);
+            miniSelectionEl.style.top = (e.delegateTarget.scrollTop/(totalHeight-height))*height+e.delegateTarget.scrollTop+"px";
+        });
+        _documentUpdate();
+    }
 
-	function _documentChange() {
+	function _documentUpdate() {
 
 		var miniSelectionEl = $('#mini-map .selection');
 		var drag = false;
-		var height = $(window).height();
 
 		var editor = EditorManager.getCurrentFullEditor();
+        
+        var height = $(editor.getScrollerElement()).height();
+        var width = $(editor.getScrollerElement()).width();
 		
 		var lineCount = editor.lineCount();
 		
 		console.log(lineCount);
 		var totalHeight = editor.totalHeight(true);
+        
+        var ratio = (height-200)/totalHeight;
+        //console.log();
 		console.log(editor.totalHeight(true) + ' ' + height );
-
-		var doc = DocumentManager.getCurrentDocument();
-		console.log($(doc));
+		var doc = editor.document;
+        console.log(ratio);
+        // translate(0px, -'+(height-(height*ratio/2))*2+'px)'
+        $("#mini-map").css('-webkit-transform', 'scale('+ratio+','+ratio+')');
 		//var doc = editor.document;	
-
+        
 		if (doc) {
 			//console.log($('.CodeMirror-lines div div:eq(2)').html());
-			_change($('.CodeMirror-lines div div:eq(2)').html());
-
-			$(doc).on('change', function () {
-				_change($('.CodeMirror-lines div div:eq(2)').html());
-			});
+            _change(editor.getScrollerElement().children[0].children[0].children[1].innerHTML);
 
 			miniSelectionEl.css({
-				height: pxToLine(height) + 'px'
+				height: height + 'px',
+                width: width + 'px'
 			});
 
 			//			miniSelectionEl.draggable({
@@ -98,9 +112,8 @@ define(function (require, exports, module) {
 	loadCSSPromise.then(function () {
 		_drawMap();
 		_documentChange();
-		$(DocumentManager).on('currentDocumentChange', function (e) {
-			_documentChange();
-		});
+		$(DocumentManager).on('currentDocumentChange', _documentChange);
+        $(DocumentManager).on('documentSaved', _documentUpdate);
 	});
 
 });
