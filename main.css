@@ -14,6 +14,7 @@
 	width:141px;
 	border-radius:3px;
 	background-color:rgba(0,0,0, 0.06);
+	border: 1px solid rgba(0,0,0,0.2);
 	z-index:22;
 }
 
@@ -32,3 +33,8 @@
 	width:135px;
 }
 	
+@media (max-width: 600px) {
+	#mini-map{
+		display: none;
+	}
+}
