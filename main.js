@@ -32,64 +32,96 @@ define(function (require, exports, module) {
 
 
 	function pxToLine(px) {
-		return px / 8.4;
+        return px / 8.4;
 	}
 
+    function _documentChange() {
+        try{
+            var editor = DocumentManager.getCurrentDocument()._masterEditor;
+            var drag = false;
+            
+            var height = $(editor.getScrollerElement()).height();
+            var width = $(editor.getScrollerElement()).width();
+            
+            var lineCount = editor.lineCount();
+            
+            console.log(lineCount);
+            
+            
+            var miniSelectionEl = $('#mini-map .selection');
+            miniSelectionEl.css({
+                height: height + 'px',
+                width: width + 'px'
+            });
+            
+            miniSelectionEl.draggable({
+                containment: "parent",
+                start: function () {
+                    drag = true;
+                },
+                drag: function () {
+                    drag = true;
+                    var x = editor.getScrollPos().x;
+                    var y = $('#mini-map .selection').offset().top;
+                    editor.setScrollPos(x, y);
+                },
+                stop: function () {
+                    drag = false;
+                }
+            });
+            
+            _documentUpdate();
+            var totalHeight = $("#mini-map").height();
+            console.log(editor.totalHeight(true) + ' ' + height );
+            var ratio = (height)/totalHeight;
+            $("#mini-map").css('-webkit-transform', 'scale('+ratio+')');
+            console.log($("#mini-map").height());
+            $(editor).on('scroll', function(e){
+                if(!drag){
+                    var height = $(editor.getScrollerElement()).height();
+                    var totalHeight = editor.totalHeight(true);
+                    var miniSelectionEl = $('#mini-map .selection')[0];
+                    //console.log(miniSelectionEl);
+                    miniSelectionEl.style.top = (e.delegateTarget.scrollTop/(totalHeight-height))*height+e.delegateTarget.scrollTop+"px";
+                }
+            });
+        } catch (e){
+            console.log("the document probably wasn't ready yet");
+            console.log(e);
+        }
+    }
 
-	function _documentChange() {
+	function _documentUpdate() {
 
 		var miniSelectionEl = $('#mini-map .selection');
 		var drag = false;
-		var height = $(window).height();
 
-		var editor = EditorManager.getCurrentFullEditor();
+        //console.log();
 		
-		var lineCount = editor.lineCount();
-		
-		console.log(lineCount);
-		var totalHeight = editor.totalHeight(true);
-		console.log(editor.totalHeight(true) + ' ' + height );
-
 		var doc = DocumentManager.getCurrentDocument();
-		console.log($(doc));
+        var editor = doc._masterEditor;
+        //console.log(ratio);
+        // translate(0px, -'+(height-(height*ratio/2))*2+'px)'
+        
 		//var doc = editor.document;	
-
+        
 		if (doc) {
+            console.log(editor.getScrollerElement());
 			//console.log($('.CodeMirror-lines div div:eq(2)').html());
-			_change($('.CodeMirror-lines div div:eq(2)').html());
+            _change(editor.getScrollerElement().children[0].children[0].children[1].innerHTML);
 
-			$(doc).on('change', function () {
-				_change($('.CodeMirror-lines div div:eq(2)').html());
-			});
+			
 
-			miniSelectionEl.css({
-				height: pxToLine(height) + 'px'
-			});
-
-			//			miniSelectionEl.draggable({
-			//				containment: "parent",
-			//				start: function () {
-			//					drag = true;
-			//				},
-			//				drag: function () {
-			//					drag = true;
-			//					var x = editor.getScrollPos().x;
-			//					var y = $('#mini-map .selection').offset().top - 40;
-			//					editor.setScrollPos(x, y);
-			//				},
-			//				stop: function () {
-			//					drag = false;
-			//				}
-			//			});
-			//
-			//			$(editor).on('scroll', function () {
-			//				if (drag === false) {
-			//					var y = editor.getScrollPos().y / 10;
-			//					miniSelectionEl.css({
-			//						'top': y + 'px'
-			//					});
-			//				}
-			//			});
+						
+			
+						/*$(editor).on('scroll', function () {
+							if (drag === false) {
+								var y = editor.getScrollPos().y / 10;
+								miniSelectionEl.css({
+									'top': y + 'px'
+								});
+							}
+						});*/
 		}
 	}
 
@@ -98,9 +130,8 @@ define(function (require, exports, module) {
 	loadCSSPromise.then(function () {
 		_drawMap();
 		_documentChange();
-		$(DocumentManager).on('currentDocumentChange', function (e) {
-			_documentChange();
-		});
+		$(DocumentManager).on('currentDocumentChange', _documentChange);
+        $(DocumentManager).on('documentSaved', _documentUpdate);
 	});
 
 });

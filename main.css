@@ -1,36 +1,35 @@
 #mini-map {
-		
+    -webkit-transform-origin: 100% 0%;
+    -webkit-transform: scale(1);
 	position: fixed;
 	top: 37px;
 	width: 70px;
 	right:0;
 	margin-right:86px;
-	z-index: 21;
+	z-index: 0;
 }
  
 #mini-map .selection {	
-	top:-2px;
+	top:0px;
 	position: absolute;
 	width:141px;
 	border-radius:3px;
 	background-color:rgba(0,0,0, 0.06);
 	border: 1px solid rgba(0,0,0,0.2);
-	z-index:22;
+	z-index:2;
 }
 
 #mini-map pre {
-	
 	font-family: 'SourceCodePro', monospace;	
 	white-space: pre;
 	word-wrap: normal;
 	border-color:transparent;
-	font-size:2px;
-	line-height:1px;
+	/*font-size:3px;
+	line-height:3px;*/
 	padding: 0;
 	margin:0;
 	background:transparent;
 	overflow:hidden;
-	width:135px;
 }
 	
 @media (max-width: 600px) {
