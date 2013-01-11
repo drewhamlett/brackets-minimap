@@ -29,7 +29,6 @@
 	padding: 0;
 	margin:0;
 	background:transparent;
-	overflow:hidden;
 }
 	
 @media (max-width: 600px) {

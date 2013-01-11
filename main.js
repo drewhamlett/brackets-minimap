@@ -5,6 +5,7 @@ define(function (require, exports, module) {
 	"use strict";
 
 	require('jquery-ui-1.9.2.custom.min');
+    require('runmode');
 
 	var CommandManager = brackets.getModule("command/CommandManager"),
 		EditorManager = brackets.getModule("editor/EditorManager"),
@@ -23,7 +24,7 @@ define(function (require, exports, module) {
 	}
 
 	function _drawMap() {
-		$('.main-view').append('<div id="mini-map"><div class="selection"></div><div class="cm-s-default" id="mini-map-code"></div></div>');
+		$('.main-view').append('<div id="mini-map"><div class="selection"></div><pre id="mini-map-code" class="cm-s-default"></pre></div>');
 	}
 
 	function lineToPx(line) {
@@ -36,7 +37,7 @@ define(function (require, exports, module) {
 	}
 
     function _documentChange() {
-        try{
+        //try{
             var editor = DocumentManager.getCurrentDocument()._masterEditor;
             var drag = false;
             
@@ -71,6 +72,7 @@ define(function (require, exports, module) {
             });
             
             _documentUpdate();
+
             var totalHeight = $("#mini-map").height();
             console.log(editor.totalHeight(true) + ' ' + height );
             var ratio = (height)/totalHeight;
@@ -85,30 +87,29 @@ define(function (require, exports, module) {
                     miniSelectionEl.style.top = (e.delegateTarget.scrollTop/(totalHeight-height))*height+e.delegateTarget.scrollTop+"px";
                 }
             });
-        } catch (e){
+        /*} catch (e){
             console.log("the document probably wasn't ready yet");
             console.log(e);
-        }
+        }*/
     }
 
 	function _documentUpdate() {
 
-		var miniSelectionEl = $('#mini-map .selection');
-		var drag = false;
+		//var miniSelectionEl = $('#mini-map .selection');
+		//var drag = false;
 
         //console.log();
 		
 		var doc = DocumentManager.getCurrentDocument();
-        var editor = doc._masterEditor;
+        //var editor = doc._masterEditor;
         //console.log(ratio);
         // translate(0px, -'+(height-(height*ratio/2))*2+'px)'
         
 		//var doc = editor.document;	
         
 		if (doc) {
-            console.log(editor.getScrollerElement());
 			//console.log($('.CodeMirror-lines div div:eq(2)').html());
-            _change(editor.getScrollerElement().children[0].children[0].children[1].innerHTML);
+            CodeMirror.runMode(doc.getText(), "application/xml", document.getElementById("mini-map-code"));
 
 			
 
