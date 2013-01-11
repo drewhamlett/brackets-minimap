@@ -37,7 +37,7 @@ define(function (require, exports, module) {
 	}
 
     function _documentChange() {
-        //try{
+        try{
             var editor = DocumentManager.getCurrentDocument()._masterEditor;
             var drag = false;
             
@@ -87,10 +87,10 @@ define(function (require, exports, module) {
                     miniSelectionEl.style.top = (e.delegateTarget.scrollTop/(totalHeight-height))*height+e.delegateTarget.scrollTop+"px";
                 }
             });
-        /*} catch (e){
+        } catch (e){
             console.log("the document probably wasn't ready yet");
             console.log(e);
-        }*/
+        }
     }
 
 	function _documentUpdate() {
@@ -109,7 +109,7 @@ define(function (require, exports, module) {
         
 		if (doc) {
 			//console.log($('.CodeMirror-lines div div:eq(2)').html());
-            CodeMirror.runMode(doc.getText(), "application/xml", document.getElementById("mini-map-code"));
+            CodeMirror.runMode(doc.getText(), doc._masterEditor._codeMirror.getOption("mode"), document.getElementById("mini-map-code"));
 
 			
 
