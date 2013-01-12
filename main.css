@@ -6,7 +6,7 @@
 	width: 70px;
 	right:0;
 	margin-right:86px;
-	z-index: 0;
+	z-index: 10;
 }
  
 #mini-map .selection {	
@@ -24,8 +24,8 @@
 	white-space: pre;
 	word-wrap: normal;
 	border-color:transparent;
-	/*font-size:3px;
-	line-height:3px;*/
+	font-size:12px;
+	line-height:15px;
 	padding: 0;
 	margin:0;
 	background:transparent;

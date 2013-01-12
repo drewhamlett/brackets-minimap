@@ -55,37 +55,47 @@ define(function (require, exports, module) {
                 width: width + 'px'
             });
             
-            miniSelectionEl.draggable({
-                containment: "parent",
-                start: function () {
-                    drag = true;
-                },
-                drag: function () {
-                    drag = true;
-                    var x = editor.getScrollPos().x;
-                    var y = $('#mini-map .selection').offset().top;
-                    editor.setScrollPos(x, y);
-                },
-                stop: function () {
-                    drag = false;
-                }
-            });
+            
             
             _documentUpdate();
 
             var totalHeight = $("#mini-map").height();
+            console.log(totalHeight);
             console.log(editor.totalHeight(true) + ' ' + height );
-            var ratio = (height)/totalHeight;
-            $("#mini-map").css('-webkit-transform', 'scale('+ratio+')');
-            console.log($("#mini-map").height());
-            $(editor).on('scroll', function(e){
-                if(!drag){
-                    var height = $(editor.getScrollerElement()).height();
-                    var totalHeight = editor.totalHeight(true);
-                    var miniSelectionEl = $('#mini-map .selection')[0];
-                    //console.log(miniSelectionEl);
-                    miniSelectionEl.style.top = (e.delegateTarget.scrollTop/(totalHeight-height))*height+e.delegateTarget.scrollTop+"px";
+            var ratio = height/totalHeight;
+
+
+            $(miniSelectionEl).mousedown(function(e){
+                drag = true;
+            });
+            $(document).mousemove(function(e){
+                if(drag){
+                    var x = editor.getScrollPos().x;
+                    editor.setScrollPos(x, e.clientY*(1/ratio));
                 }
+            });
+
+            $(document).mouseup(function(e){
+                drag = false;
+            });
+
+            $("#mini-map").click(function(e){
+                var x = editor.getScrollPos().x;
+                var miniSelectionEl = $('#mini-map .selection')[0];
+                editor.setScrollPos(x, (e.clientY)*(1/ratio)-$(miniSelectionEl).height()/2);
+            });
+
+            $("#mini-map").css('-webkit-transform', 'scale('+ratio+')');
+
+            $(editor).on('scroll', function(e){
+                //if(!drag){
+                var height = $(editor.getScrollerElement()).height();
+                var totalHeight = editor.totalHeight(true);
+                var miniSelectionEl = $('#mini-map .selection')[0];
+                //console.log(miniSelectionEl);
+                console.log(editor.getScrollPos().y);
+                miniSelectionEl.style.top = editor.getScrollPos().y+"px";
+                //}
             });
         } catch (e){
             console.log("the document probably wasn't ready yet");
