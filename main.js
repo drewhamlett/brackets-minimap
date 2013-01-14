@@ -62,7 +62,7 @@ define(function (require, exports, module) {
             var totalHeight = $("#mini-map").height();
             console.log(totalHeight);
             console.log(editor.totalHeight(true) + ' ' + height );
-            var ratio = height/totalHeight;
+            var ratio = height/totalHeight>200/width?200/width:height/totalHeight;
 
 
             $(miniSelectionEl).mousedown(function(e){
