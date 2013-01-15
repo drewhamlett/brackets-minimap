@@ -7,13 +7,8 @@ define(function (require, exports, module) {
 	require('jquery-ui-1.9.2.custom.min');
     require('runmode');
 
-	var CommandManager = brackets.getModule("command/CommandManager"),
-		EditorManager = brackets.getModule("editor/EditorManager"),
-		ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
-		Editor = brackets.getModule("editor/Editor").Editor,
+	var ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
 		DocumentManager = brackets.getModule("document/DocumentManager"),
-		EditorUtils = brackets.getModule("editor/EditorUtils"),
-		Menus = brackets.getModule("command/Menus"),
 		COMMAND_ID = "me.drewh.brackets.minimap";
 
 	var loadCSSPromise = ExtensionUtils.loadStyleSheet(module, 'main.css');
@@ -46,28 +41,23 @@ define(function (require, exports, module) {
             
             var lineCount = editor.lineCount();
             
-            console.log(lineCount);
-            
-            
             var miniSelectionEl = $('#mini-map .selection');
             miniSelectionEl.css({
                 height: height + 'px',
                 width: width + 'px'
             });
             
-            
-            
             _documentUpdate();
 
             var totalHeight = $("#mini-map").height();
-            console.log(totalHeight);
-            console.log(editor.totalHeight(true) + ' ' + height );
+            console.log(totalHeight + ' ' + height );
+            
             var ratio = height/totalHeight>200/width?200/width:height/totalHeight;
-
 
             $(miniSelectionEl).mousedown(function(e){
                 drag = true;
             });
+            
             $(document).mousemove(function(e){
                 if(drag){
                     var x = editor.getScrollPos().x;
@@ -93,7 +83,7 @@ define(function (require, exports, module) {
                 var totalHeight = editor.totalHeight(true);
                 var miniSelectionEl = $('#mini-map .selection')[0];
                 //console.log(miniSelectionEl);
-                console.log(editor.getScrollPos().y);
+                //console.log(editor.getScrollPos().y);
                 miniSelectionEl.style.top = editor.getScrollPos().y+"px";
                 //}
             });
@@ -104,35 +94,10 @@ define(function (require, exports, module) {
     }
 
 	function _documentUpdate() {
-
-		//var miniSelectionEl = $('#mini-map .selection');
-		//var drag = false;
-
-        //console.log();
-		
 		var doc = DocumentManager.getCurrentDocument();
-        //var editor = doc._masterEditor;
-        //console.log(ratio);
-        // translate(0px, -'+(height-(height*ratio/2))*2+'px)'
-        
-		//var doc = editor.document;	
-        
 		if (doc) {
 			//console.log($('.CodeMirror-lines div div:eq(2)').html());
             CodeMirror.runMode(doc.getText(), doc._masterEditor._codeMirror.getOption("mode"), document.getElementById("mini-map-code"));
-
-			
-
-						
-			
-						/*$(editor).on('scroll', function () {
-							if (drag === false) {
-								var y = editor.getScrollPos().y / 10;
-								miniSelectionEl.css({
-									'top': y + 'px'
-								});
-							}
-						});*/
 		}
 	}
 
